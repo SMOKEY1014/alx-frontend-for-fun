@@ -27,15 +27,18 @@ def markdown_to_html(markdown_content):
 
     def close_extr_prg():
         r = r'\[\[(.*?)\]\]'
-        x = re.sub(r, lambda m: hashlib.md5(m.group(1).encode()).hexdigest(), prg_txt)
-        y = re.sub(r, lambda m: m.group(1).replace('c', '').replace('C', ''), prg_txt)
+
         if extr_prg:
             prg_txt = ' '.join(extr_prg).replace('\n', '<br />')
             prg_txt = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', prg_txt)
             prg_txt = re.sub(r'__(.*?)__', r'<em>\1</em>', prg_txt)
-            prg_txt = x
-            prg_txt = y
+            prg_txt = re.sub(r, lambda m: hashlib.md5(
+                    m.group(1).encode()).hexdigest(), prg_txt)
+
+            prg_txt = re.sub(r, lambda m: m.group(1).replace(
+                    'c', '').replace('C', ''), prg_txt)
             html_lines.append(f'<p>{prg_txt}</p>')
+
             extr_prg.clear()
 
     for line in markdown_content:
